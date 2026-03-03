@@ -1,0 +1,7 @@
+sources:
+  - name: DEV_DATA
+    database: PROP_DEV
+    schema: DEV_DATA
+    tables: 
+      - name: DEV_DETAILS
+        description: Raw property development dataset
