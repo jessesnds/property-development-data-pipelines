@@ -1,0 +1,30 @@
+version: 2
+
+models:
+  - name: int_defect_costs_by_type
+    description: >
+      Intermediate aggregation model summarising defect metrics
+      by defect_type. Calculates total number of defects,
+      total defect cost, and average defect cost.
+
+    columns:
+      - name: defect_type
+        description: Category or classification of the defect.
+        tests:
+          - not_null
+          - unique
+
+      - name: defect_count
+        description: Total number of defects recorded for this defect_type.
+        tests:
+          - not_null
+
+      - name: total_cost
+        description: Total cost associated with all defects of this defect_type.
+        tests:
+          - not_null
+
+      - name: avg_cost
+        description: Average cost per defect for this defect_type.
+        tests:
+          - not_null

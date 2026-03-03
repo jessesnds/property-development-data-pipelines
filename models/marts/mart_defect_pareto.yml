@@ -1,0 +1,55 @@
+version: 2
+
+models:
+  - name: mart_defect_pareto
+    description: >
+      Mart layer model providing a Pareto-style analysis of defect costs.
+      Calculates total and cumulative contribution of each defect_type
+      to overall defect cost and defect count.
+
+    columns:
+      - name: defect_type
+        description: Category or classification of the defect.
+        tests:
+          - not_null
+          - unique
+
+      - name: defect_count
+        description: Total number of defects for this defect_type.
+        tests:
+          - not_null
+
+      - name: total_cost
+        description: Total cost associated with this defect_type.
+        tests:
+          - not_null
+
+      - name: avg_cost
+        description: Average cost per defect for this defect_type.
+        tests:
+          - not_null
+
+      - name: grand_total_cost
+        description: Total defect cost across all defect types.
+        tests:
+          - not_null
+
+      - name: cumulative_cost
+        description: Running cumulative total of defect cost ordered by highest cost first.
+        tests:
+          - not_null
+
+      - name: pct_of_total_cost
+        description: Percentage contribution of this defect_type to total defect cost.
+        tests:
+          - not_null
+
+      - name: pct_of_total_defects
+        description: Percentage contribution of this defect_type to total defect count.
+        tests:
+          - not_null
+
+      - name: cumulative_cost_pct
+        description: Cumulative percentage contribution to total defect cost.
+        tests:
+          - not_null

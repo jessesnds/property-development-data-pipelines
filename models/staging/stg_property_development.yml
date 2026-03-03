@@ -1,0 +1,54 @@
+version: 2
+
+models:
+  - name: stg_property_development
+    description: >
+      Staging model containing development units with recorded defects.
+      Filters source data to only include rows where has_defect = true.
+
+    columns:
+      - name: unit_id
+        description: Unique identifier for each unit within a development project.
+        tests:
+          - not_null
+          - unique 
+
+      - name: project_id
+        description: Identifier for the property development project the unit belongs to.
+        tests:
+          - not_null
+
+      - name: developer
+        description: Name of the developer responsible for the project.
+
+      - name: suburb
+        description: Suburb in which the property development is located.
+
+      - name: has_defect
+        description: Boolean flag indicating whether the unit has a recorded defect.
+        tests:
+          - not_null
+          - accepted_values:
+              arguments: 
+                values: [true]
+
+      - name: defect_type
+        description: Category or classification of the defect identified in the unit.
+        tests:
+          - not_null
+
+      - name: defect_cost
+        description: Estimated or actual cost associated with rectifying the defect.
+        tests:
+          - not_null 
+
+      - name: warranty_claim_date
+        description: Date on which the defect was formally claimed under warranty.
+        tests:
+          - not_null 
+
+      - name: property_type
+        description: Type of property (e.g., apartment, townhouse, house).
+
+      - name: num_units
+        description: Total number of units within the development project.
