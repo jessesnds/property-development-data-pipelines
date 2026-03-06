@@ -1,34 +1,33 @@
 # property-development-data-pipelines
-Analytics pipelines analysing 250 Sydney property development projects. The dataset I am working from contains land acquisition costs, DA approval timelines, constructions delays, defect costs and project financial performance.
-
-Project overview:
-This project builds a data transformation pipeline using dbt and Snowflake to analyse construction defect costs.
+Analytics pipelines analysing 250 Sydney property development projects. The dataset I am working from contains land acquisition costs, DA approval timelines, constructions delays, defect costs and project financial performance. This project builds a data transformation pipeline using dbt and Snowflake to analyse construction defect costs.
 The pipeline transforms raw property development defect data into a Pareto-style mart highlighting which defect categories drive the highest remediation costs.
+
 
 Tech stack:
 - SQL
 - dbt
 - Snowflake
 - GitHub
+  
 
 Data model structure:
+
   models/
   
     staging/
       stg_property_development.sql
       stg_property_development.yml
 
-  intermediate/
-    int_defect_costs_by_type.sql
-    int_defect_costs_by_type.yml
+    intermediate/
+      int_defect_costs_by_type.sql
+      int_defect_costs_by_type.yml
 
-  marts/
-    mart_defect_pareto.sql
-    mart_defect_pareto.yml
+    marts/
+      mart_defect_pareto.sql
+      mart_defect_pareto.yml
 
 
-Pipeline architecture:
-(This project follows a layered dbt architecture)
+Pipeline architecture (This project follows a layered dbt architecture)
 
 Raw Source
     ↓
@@ -37,6 +36,7 @@ stg_property_development
 int_defect_costs_by_type
     ↓
 mart_defect_pareto
+
 
 Source: 
 - Defined in a dbt source.yml file
@@ -95,10 +95,10 @@ This separates concerns and allows for reusable design. Each specifically contri
     produces Pareto style analysis of defect costs 
     calculates cumulative cost contribution 
 
--	Why the metrics exist?
+Why the metrics exist?
 
-    Cumulative cost
-    Percentage of total cost
-    Defect count 
+    - Cumulative cost
+    - Percentage of total cost
+    - Defect count 
 
 All allow for identification of defect types driving the majority of remediation costs. 
