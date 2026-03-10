@@ -1,0 +1,39 @@
+version: 2
+
+models:
+  - name: int_project_avg_pricing
+    description: >
+      Aggregation model that calculates the average price per sqm across all unit types within a project.
+      It also computes the standard deviation, minimum, and maximum price per sqm.
+      This model serves as the project-level baseline used to compare individual units and identify which units command a premium.
+
+    columns:
+      - name: project_id
+        description: Identifier for the property development project the unit belongs to.
+        data_tests:
+          - not_null
+          - unique  
+
+      - name: avg_price_per_sqm
+        description: Average price per square metre across all units in the project.
+        data_tests:
+          - not_null 
+
+      - name: total_num_units
+        description: The total number of units within a project.
+        data_tests:
+          - not_null 
+
+      - name: stddev_price_per_sqm
+        description: Standard deviation of price per square metre across all units in the project.
+        
+
+      - name: min_price_per_sqm
+        description: Minimum price per square metre among units in the project.
+        data_tests:
+          - not_null 
+
+      - name: max_price_per_sqm
+        description: Maximum price per square metre among units in the project.
+        data_tests:
+          - not_null 

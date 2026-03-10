@@ -1,0 +1,55 @@
+version: 2
+
+models:
+  - name: stg_property_development__pricing
+    description: >
+      Staging model containing development units with their final sale price, 
+      pricing per sqaure metre and internal size. Filters source data to exclude
+      final_sale_price & internal_area_sqm that are null.
+
+    columns:
+      - name: unit_id
+        description: Unique identifier for each unit within a development project.
+        data_tests:
+          - not_null 
+          - unique 
+
+      - name: project_id
+        description: Identifier for the property development project the unit belongs to.
+        data_tests:
+          - not_null 
+
+      - name: unit_type
+        description: Identifies the unit floor plan (amount of bedrooms)
+        data_tests:
+          - not_null 
+
+      - name: suburb
+        description: Suburb in which the property development is located.
+
+      - name: property_type
+        description: Indicates the type of property (e.g apartment/ townhouse)
+        data_tests:
+          - accepted_values:
+              arguments: 
+                values: ['Apartment', 'Townhouse', 'Mixed']
+
+      - name: final_sale_price
+        description: The final sale price of the unit.
+        data_tests:
+          - not_null 
+
+      - name: internal_area_sqm
+        description: Indicates the size inside the apartment in sqaure metres.
+        data_tests:
+          - not_null 
+
+      - name: price_per_sqm
+        description: The price of the build per square metre.
+        data_tests:
+          - not_null 
+
+      - name: settlement_date
+        description: The date in which the unit settled.
+        data_tests:
+          - not_null 
