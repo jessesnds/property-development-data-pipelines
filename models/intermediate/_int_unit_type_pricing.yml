@@ -1,0 +1,51 @@
+version: 2
+
+models:
+  - name: int_unit_type_pricing
+    description: >
+      Aggregation model that calculates the average price per square metre for each unit type within a project.
+      It also computes the standard deviation, minimum, and maximum price per sqm.
+      This model serves as the unit-level baseline used to compare project level averages and identify which units command a premium.
+      
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - project_id
+            - unit_type
+
+    columns:
+      - name: project_id
+        description: Identifier for the property development project the unit belongs to.
+        data_tests:
+          - not_null 
+
+      - name: unit_type
+        description: Indicates the unit type (e.g. studio, 1-bed, 2-bed, 3-bed). 
+        data_tests:
+          - not_null 
+
+      - name: suburb
+        description: Suburb in which the property development is located.
+
+      - name: unit_avg_price_per_sqm
+        description: Average price per square metre for the unit type within the project.
+        data_tests:
+          - not_null 
+
+      - name: unit_type_count
+        description: The total count of a particular unit type within the project.
+        data_tests:
+          - not_null 
+
+      - name: unit_stddev
+        description:  Standard deviation of price per square metre across units of this type within the project.
+
+      - name: min_price_per_sqm
+        description: Minimum price per square metre per unit in the project.
+        data_tests:
+          - not_null 
+
+      - name: max_price_per_sqm
+        description: Maximum price per square metre per unit in the project.
+        data_tests:
+          - not_null 
