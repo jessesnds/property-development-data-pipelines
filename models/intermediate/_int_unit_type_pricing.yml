@@ -26,6 +26,8 @@ models:
 
       - name: suburb
         description: Suburb in which the property development is located.
+        data_tests:
+          - not_null 
 
       - name: unit_avg_price_per_sqm
         description: Average price per square metre for the unit type within the project.

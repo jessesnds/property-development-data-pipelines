@@ -1,0 +1,46 @@
+version: 2
+
+models:
+  - name: agg_unit_type_pricing_patterns
+    description: >  
+      Summary layer that aggregates project-level pricing metrics into suburb-level patterns by unit-type. 
+      Referencing the mart layer, this aggregation model provides high level insights into the average pricing, cost variation, 
+      and percentage by averaging key performance metrics. 
+
+    columns:
+
+      - name: unit_type
+        description: Indicates the unit type (e.g. studio, 1-bed, 2-bed, 3-bed).
+        data_tests:
+          - not_null 
+
+      - name: unit_type_count
+        description: The total count of each unit type.
+        data_tests:
+          - not_null 
+
+      - name: suburb
+        description: Suburb in which the property development is located.
+        data_tests:
+          - not_null 
+
+      - name: avg_price_premium_dollar
+        description: Calculates, on average, the difference between unit-level and project-level average price per square metre.
+        data_tests:
+          - not_null 
+
+      - name: avg_price_premium_pct
+        description: Average percentage difference between unit-level and project-level price per square metre per unit type.
+        data_tests:
+          - not_null 
+
+      - name: avg_coefficient_of_variation
+        description: Average relative price variability across projects for a given unit type and suburb.
+
+      - name: max_coefficient_of_variation
+        description: Highest observed price variability across projects for a given unit type and suburb.
+
+      - name: premium_frequency_pct
+        description: Percentage of projects where a given unit-type is priced above the project average within a suburb. 
+        data_tests:
+          - not_null

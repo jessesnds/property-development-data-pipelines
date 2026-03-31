@@ -16,6 +16,8 @@ models:
 
       - name: suburb
         description: Suburb in which the property development is located.
+        data_tests:
+          - not_null 
 
       - name: avg_price_per_sqm
         description: Average price per square metre across all units in the project.
@@ -29,7 +31,6 @@ models:
 
       - name: stddev_price_per_sqm
         description: Standard deviation of price per square metre across all units in the project.
-        
 
       - name: min_price_per_sqm
         description: Minimum price per square metre among units in the project.
