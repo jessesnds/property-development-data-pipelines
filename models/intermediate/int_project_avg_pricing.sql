@@ -6,5 +6,5 @@ select
     ROUND(STDDEV(price_per_sqm), 2) as project_stddev,
     MIN(price_per_sqm) as min_price_per_sqm,
     MAX(price_per_sqm) as max_price_per_sqm,
-from {{ ref('stg_property_development__pricing') }}
+from {{ ref('stg_property_development__projects') }}
 GROUP BY project_id, suburb

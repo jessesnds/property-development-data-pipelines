@@ -1,0 +1,25 @@
+select
+    unit_id,
+    project_id,
+    unit_type,
+    suburb,
+    land_acquisition_date,
+    da_approval_days,
+    construction_start_date,
+    planned_construction_months,
+    actual_construction_months,
+    delay_months,
+    DATE(construction_completion_date) as construction_completion_date,
+    property_type,
+    internal_area_sqm,
+    price_per_sqm,
+    total_revenue,
+    planned_construction_cost,
+    actual_construction_cost,
+    total_project_cost,
+    total_land_cost,
+    total_defect_costs,
+    final_sale_price,
+    settlement_date
+from {{ source('DEV_DATA', 'DEV_DETAILS') }}
+where final_sale_price > 0 AND internal_area_sqm > 0

@@ -1,11 +1,12 @@
 version: 2
 
 models:
-  - name: stg_property_development__pricing
+  - name: stg_property_development__projects
     description: >
-      Staging model containing development units with their final sale price, 
-      pricing per sqaure metre and internal size. Filters source data to exclude
-      final_sale_price & internal_area_sqm that are null.
+      Staging model containing project development units with their final sale price, 
+      construction start date, internal size and total defect costs amongst other key metrics. 
+      Filters source data to exclude final_sale_price & internal_area_sqm that are null. 
+      Removes timestamp on construction complete date to show only date. 
 
     columns:
       - name: unit_id
