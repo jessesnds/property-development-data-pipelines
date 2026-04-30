@@ -1,0 +1,100 @@
+version: 2
+
+models:
+  - name: mart_project_profitability
+    description: >
+      Mart model delivering one row per project with all financial performance,
+      time efficiency, and return metrics needed for analysts to compare profitability
+      and returns across the property development portfolio.
+      Joins int_profit_analysis_revenue (anchor), int_profit_analysis_cost,
+      and int_profit_analysis_time via three CTEs before a final select.
+
+    columns:
+      - name: project_id
+        description: >
+          Unique identifier for each development project. Primary key of this model.
+          One row per project is the intended grain of this mart.
+        data_tests:
+          - unique
+          - not_null
+          - relationships:
+              to: ref('int_profit_analysis_revenue')
+              field: project_id
+
+      - name: property_type
+        description: >
+          The most frequently occurring property type for the project.
+          Sourced from int_profit_analysis_revenue.
+          Possible values include Apartment, Townhouse, and Mixed.
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: ['Apartment', 'Townhouse', 'Mixed']
+
+      - name: units_sold
+        description: >
+          The number of distinct units sold for the project.
+          Sourced from int_profit_analysis_revenue via COUNT(DISTINCT unit_id).
+        data_tests:
+          - not_null
+
+      - name: net_profit
+        description: >
+          Total revenue minus total project cost. The foundational profitability
+          metric from which ROI, profit margin, and annualised return are derived.
+          A negative value indicates a loss-making project.
+          Calculated as: total_revenue - total_project_cost.
+
+      - name: roi_pct
+        description: >
+          Return on investment expressed as a percentage. Measures profit relative
+          to the total cost invested in the project.
+          Calculated as: ((total_revenue - total_project_cost) / total_project_cost) * 100.
+          Returns NULL where total_project_cost is zero to avoid division by zero.
+          Rounded to 2 decimal places.
+
+      - name: profit_margin_pct
+        description: >
+          Profit margin expressed as a percentage. Measures what proportion of
+          total revenue becomes profit.
+          Calculated as: ((total_revenue - total_project_cost) / total_revenue) * 100.
+          Returns NULL where total_revenue is zero to avoid division by zero.
+          Rounded to 2 decimal places.
+
+      - name: annualised_return
+        description: >
+          The return on investment normalised to a per-year basis, enabling direct
+          comparison between projects of different durations.
+          Calculated as: (net_profit / total_project_cost) / (duration_days / 365.0).
+          Returns NULL for incomplete projects where duration_days is NULL.
+          Rounded to 2 decimal places.
+
+      - name: duration_days
+        description: >
+          The number of calendar days between construction start and construction
+          completion. Calculated via DATEDIFF in the project_duration CTE.
+          NULL for projects where construction_completion_date is NULL,
+          indicating the project is still in progress.
+
+      - name: is_completed
+        description: >
+          Boolean flag indicating whether the project has a recorded completion date.
+          TRUE where construction_completion_date is not null, FALSE otherwise.
+          Analysts should filter to is_completed = TRUE when calculating return
+          metrics to avoid incomplete project data skewing results.
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: [true, false]
+
+      - name: is_missing_cost_data
+        description: >
+          Boolean flag indicating whether the project had no matching record in
+          int_profit_analysis_cost after the left join. TRUE where total_project_cost
+          is null, meaning cost data was unavailable for this project.
+          Projects where this is TRUE will have null values for all cost-dependent
+          metrics including net_profit, roi_pct, profit_margin_pct, and annualised_return.
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: [true, false]

@@ -49,4 +49,4 @@ from financial_metrics f
 left join project_duration t
     on f.project_id = t.project_id
  left join annualised_return a
-    on t.project_id = a.project_id
+    on f.project_id = a.project_id

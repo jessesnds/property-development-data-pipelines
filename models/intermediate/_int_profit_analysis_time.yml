@@ -1,0 +1,73 @@
+version: 2
+
+models:
+  - name: int_profit_analysis_time
+    description: >
+      Intermediate model that aggregates all time and duration metrics to one row per project.
+      Sourced from stg_property_development__projects. Used downstream in the
+      mart_project_profitability mart to calculate duration_days, is_completed,
+      and annualised return.
+
+    columns:
+      - name: project_id
+        description: Unique identifier for each development project. Primary key of this model.
+        data_tests:
+          - unique
+          - not_null
+
+      - name: unit_count
+        description: Total number of units counted across all rows for the project in the source table.
+        data_tests:
+          - not_null
+
+      - name: property_type
+        description: >
+          The most frequently occurring property type for the project, derived using MODE().
+          Possible values include Apartment, Townhouse, and Mixed.
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: ['Apartment', 'Townhouse', 'Mixed']
+
+      - name: land_acquisition_date
+        description: >
+          The date on which land was acquired for the project.
+          Taken as MAX() as this is a project-level date repeated across source rows.
+
+      - name: da_approval_days
+        description: >
+          Number of days taken to receive development application approval.
+          Taken as MAX() as this is a project-level figure.
+          Useful for analysing planning and approval efficiency across projects.
+
+      - name: construction_start_date
+        description: >
+          The date construction commenced for the project.
+          Taken as MAX() as this is a project-level date repeated across source rows.
+          Used in the mart layer to calculate duration_days via DATEDIFF.
+        data_tests:
+          - not_null
+
+      - name: planned_construction_months
+        description: >
+          The originally planned construction duration in months.
+          Taken as MAX() as this is a project-level figure.
+          Comparing against actual_construction_months enables delay analysis.
+
+      - name: actual_construction_months
+        description: >
+          The actual construction duration in months.
+          Taken as MAX() as this is a project-level figure.
+
+      - name: delay_months
+        description: >
+          The number of months by which the project was delayed relative to its planned
+          construction duration. Taken as MAX() as this is a project-level figure.
+          A positive value indicates a delay. Used as a proxy for project risk.
+
+      - name: construction_completion_date
+        description: >
+          The date construction was completed for the project.
+          Taken as MAX() as this is a project-level date repeated across source rows.
+          NULL for projects that are still in progress. Used in the mart layer to
+          calculate duration_days and derive the is_completed flag.

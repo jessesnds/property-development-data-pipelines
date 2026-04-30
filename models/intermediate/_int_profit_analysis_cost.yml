@@ -1,0 +1,59 @@
+version: 2
+
+models:
+  - name: int_profit_analysis_cost
+    description: >
+      Intermediate model that aggregates all cost components to one row per project.
+      Sourced from stg_property_development__projects. Used downstream in the
+      mart_project_profitability mart to calculate net profit, ROI, and profit margin.
+
+    columns:
+      - name: project_id
+        description: Unique identifier for each development project. Primary key of this model.
+        data_tests:
+          - unique
+          - not_null
+
+      - name: unit_count
+        description: Total number of units counted across all rows for the project in the source table.
+        data_tests:
+          - not_null
+
+      - name: property_type
+        description: >
+          The most frequently occurring property type for the project, derived using MODE().
+          Possible values include Apartment, Townhouse, and Mixed.
+        data_tests:
+          - not_null
+          - accepted_values:
+              values: ['Apartment', 'Townhouse', 'Mixed']
+
+      - name: planned_construction_cost
+        description: >
+          The original budgeted construction cost for the project.
+          Taken as MAX() across source rows as this is a project-level figure
+          repeated across unit rows rather than a transactional value to be summed.
+
+      - name: actual_construction_cost
+        description: >
+          The actual construction cost incurred for the project.
+          Taken as MAX() for the same reason as planned_construction_cost.
+          Comparing this against planned_construction_cost enables cost overrun analysis.
+
+      - name: total_defect_costs
+        description: >
+          Total costs attributed to defects identified during or after construction.
+          Taken as MAX() as this is a project-level figure.
+
+      - name: total_project_cost
+        description: >
+          The all-in cost of the project including construction, defects, and land costs.
+          Rounded to 2 decimal places. This is the primary cost metric used in the mart
+          layer for ROI and profit margin calculations.
+        data_tests:
+          - not_null
+
+      - name: total_land_cost
+        description: >
+          The cost of land acquisition for the project.
+          Taken as MAX() as this is a project-level figure.
